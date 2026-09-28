@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lab33.ui.theme.Lab33Theme
+import kotlin.math.cbrt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +62,7 @@ fun CalculatorScreen() {
             onOperationChange = { operation = it },
             resultMessage = resultMessage,
             onCalculate = {
-                resultMessage = calculateArithmeticMean(
+                resultMessage = calculateMean(
                     firstNumber = firstNumber,
                     secondNumber = secondNumber,
                     thirdNumber = thirdNumber,
@@ -73,23 +74,29 @@ fun CalculatorScreen() {
     }
 }
 
-private fun calculateArithmeticMean(
+private fun calculateMean(
     firstNumber: String,
     secondNumber: String,
     thirdNumber: String,
     operation: String
 ): String {
-    if (operation.trim() != "a") {
-        return "На этом этапе доступно вычисление только для символа a."
-    }
-
     val numbers = listOf(firstNumber, secondNumber, thirdNumber).map { it.toDoubleOrNull() }
     if (numbers.any { it == null }) {
         return "Введите три корректных числа."
     }
 
-    val arithmeticMean = numbers.filterNotNull().average()
-    return "Среднее арифметическое: $arithmeticMean"
+    val values = numbers.filterNotNull()
+    return when (operation.trim().lowercase()) {
+        "a" -> "Среднее арифметическое: ${values.average()}"
+        "g" -> {
+            if (values.any { it < 0 }) {
+                "Для среднего геометрического введите неотрицательные числа."
+            } else {
+                "Среднее геометрическое: ${cbrt(values[0] * values[1] * values[2])}"
+            }
+        }
+        else -> "Ошибка: используйте символ a или g."
+    }
 }
 
 @Composable
