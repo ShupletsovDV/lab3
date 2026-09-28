@@ -61,11 +61,35 @@ fun CalculatorScreen() {
             onOperationChange = { operation = it },
             resultMessage = resultMessage,
             onCalculate = {
-                resultMessage = ""
+                resultMessage = calculateArithmeticMean(
+                    firstNumber = firstNumber,
+                    secondNumber = secondNumber,
+                    thirdNumber = thirdNumber,
+                    operation = operation
+                )
             },
             contentPadding = innerPadding
         )
     }
+}
+
+private fun calculateArithmeticMean(
+    firstNumber: String,
+    secondNumber: String,
+    thirdNumber: String,
+    operation: String
+): String {
+    if (operation.trim() != "a") {
+        return "На этом этапе доступно вычисление только для символа a."
+    }
+
+    val numbers = listOf(firstNumber, secondNumber, thirdNumber).map { it.toDoubleOrNull() }
+    if (numbers.any { it == null }) {
+        return "Введите три корректных числа."
+    }
+
+    val arithmeticMean = numbers.filterNotNull().average()
+    return "Среднее арифметическое: $arithmeticMean"
 }
 
 @Composable
