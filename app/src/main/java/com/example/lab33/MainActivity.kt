@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,6 +47,7 @@ fun CalculatorScreen() {
     var secondNumber by remember { mutableStateOf("") }
     var thirdNumber by remember { mutableStateOf("") }
     var operation by remember { mutableStateOf("") }
+    var resultMessage by remember { mutableStateOf<String?>(null) }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         CalculatorForm(
@@ -57,6 +59,10 @@ fun CalculatorScreen() {
             onThirdNumberChange = { thirdNumber = it },
             operation = operation,
             onOperationChange = { operation = it },
+            resultMessage = resultMessage,
+            onCalculate = {
+                resultMessage = ""
+            },
             contentPadding = innerPadding
         )
     }
@@ -72,6 +78,8 @@ private fun CalculatorForm(
     onThirdNumberChange: (String) -> Unit,
     operation: String,
     onOperationChange: (String) -> Unit,
+    resultMessage: String?,
+    onCalculate: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -110,6 +118,31 @@ private fun CalculatorForm(
                     supportingText = { Text("a — среднее арифметическое, g — геометрическое") },
                     singleLine = true
                 )
+
+                Button(
+                    onClick = onCalculate,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Вычислить")
+                }
+            }
+        }
+
+        if (resultMessage != null) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text("Результат", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = resultMessage,
+                        modifier = Modifier.padding(top = 6.dp),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
