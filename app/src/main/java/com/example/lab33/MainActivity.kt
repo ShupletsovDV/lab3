@@ -34,44 +34,34 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Lab33Theme {
-                CalculatorScreen()
+                SeriesScreen()
             }
         }
     }
 }
 
 @Composable
-fun CalculatorScreen() {
-    var firstNumber by remember { mutableStateOf("") }
-    var secondNumber by remember { mutableStateOf("") }
-    var thirdNumber by remember { mutableStateOf("") }
-    var operation by remember { mutableStateOf("") }
+fun SeriesScreen() {
+    var xValue by remember { mutableStateOf("") }
+    var nValue by remember { mutableStateOf("") }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        CalculatorForm(
-            firstNumber = firstNumber,
-            onFirstNumberChange = { firstNumber = it },
-            secondNumber = secondNumber,
-            onSecondNumberChange = { secondNumber = it },
-            thirdNumber = thirdNumber,
-            onThirdNumberChange = { thirdNumber = it },
-            operation = operation,
-            onOperationChange = { operation = it },
+        SeriesForm(
+            xValue = xValue,
+            onXValueChange = { xValue = it },
+            nValue = nValue,
+            onNValueChange = { nValue = it },
             contentPadding = innerPadding
         )
     }
 }
 
 @Composable
-private fun CalculatorForm(
-    firstNumber: String,
-    onFirstNumberChange: (String) -> Unit,
-    secondNumber: String,
-    onSecondNumberChange: (String) -> Unit,
-    thirdNumber: String,
-    onThirdNumberChange: (String) -> Unit,
-    operation: String,
-    onOperationChange: (String) -> Unit,
+private fun SeriesForm(
+    xValue: String,
+    onXValueChange: (String) -> Unit,
+    nValue: String,
+    onNValueChange: (String) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -84,7 +74,7 @@ private fun CalculatorForm(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                text = "Введите три числа и выберите действие для вычисления среднего значения.",
+                text = "Введите действительное число x и натуральное число n для вычисления суммы ряда.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -98,17 +88,17 @@ private fun CalculatorForm(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                NumberField("Первое число", firstNumber, onFirstNumberChange)
-                NumberField("Второе число", secondNumber, onSecondNumberChange)
-                NumberField("Третье число", thirdNumber, onThirdNumberChange)
-
-                OutlinedTextField(
-                    value = operation,
-                    onValueChange = onOperationChange,
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Символ") },
-                    supportingText = { Text("a — среднее арифметическое, g — геометрическое") },
-                    singleLine = true
+                NumberField(
+                    label = "Действительное число x",
+                    value = xValue,
+                    onValueChange = onXValueChange,
+                    keyboardType = KeyboardType.Decimal
+                )
+                NumberField(
+                    label = "Натуральное число n",
+                    value = nValue,
+                    onValueChange = onNValueChange,
+                    keyboardType = KeyboardType.Number
                 )
             }
         }
@@ -116,21 +106,26 @@ private fun CalculatorForm(
 }
 
 @Composable
-private fun NumberField(label: String, value: String, onValueChange: (String) -> Unit) {
+private fun NumberField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    keyboardType: KeyboardType
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
         label = { Text(label) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun CalculatorScreenPreview() {
+private fun SeriesScreenPreview() {
     Lab33Theme {
-        CalculatorScreen()
+        SeriesScreen()
     }
 }
