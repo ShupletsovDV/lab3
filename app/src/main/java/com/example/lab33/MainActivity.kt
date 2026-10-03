@@ -55,11 +55,25 @@ fun SeriesScreen() {
             onNValueChange = { nValue = it },
             resultMessage = resultMessage,
             onCalculate = {
-                resultMessage = ""
+                resultMessage = calculateSeries(xValue, nValue)
             },
             contentPadding = innerPadding
         )
     }
+}
+
+private fun calculateSeries(xValue: String, nValue: String): String {
+    val x = xValue.toDoubleOrNull() ?: return "Введите корректное действительное число x."
+    val n = nValue.toIntOrNull() ?: return "Введите натуральное число n."
+    if (n <= 0) return "Число n должно быть натуральным."
+
+    var sum = 0.0
+    for (k in 1..n) {
+        val denominator = Math.pow(4.0, k.toDouble()) + Math.pow(5.0, (k + 2).toDouble())
+        sum += x / denominator
+    }
+
+    return "Сумма ряда: $sum"
 }
 
 @Composable
